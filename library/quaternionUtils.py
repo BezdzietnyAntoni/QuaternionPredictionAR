@@ -117,6 +117,32 @@ def splineInterpolation(quaternions: np.ndarray,
                              spline_degree = spline_degree)
 
 
+def correlationMatrix(s : np.ndarray, m_size : int, normalize : bool = False):
+    """
+    Designate correlation matrix for quaternion signal. 
+    Base on  "Convolution and Correlation Based on Discrete Quaternion Fourier Transform"
+        https://core.ac.uk/download/pdf/25495083.pdf
+
+    Args:
+        s (np.ndarray): Windowed signal
+        m_size (int): Correlation matrix size
+        normalize (bool, optional): Normalization flag, if `True` normalization on. Defaults to False.
+
+    Returns:
+        corr_matrix(np.ndarray): Correlation matrix (m,m)
+    """
+    corr_matrix = np.zeros((m_size, m_size), dtype = qt.quaternion)
+    n_iter = s.shape[0] - m_size
+    for i in range(n_iter):
+        v = s[i : i + m_size]
+        corr_matrix += np.outer(v, v.conjugate())
+    
+    if normalize:
+        return corr_matrix / n_iter
+    
+    return corr_matrix
+
+
 def randQuaternion():
     """
     Generate random normalized quaternion
