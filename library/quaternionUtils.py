@@ -2,6 +2,7 @@
 Module implements functions used for quaternion processed.
 """
 
+import random
 import numpy as np
 import quaternion as qt
 
@@ -67,3 +68,52 @@ def eulerToQuaternion(euler: np.ndarray,  seq: str = 'XYZ', degrees: bool = True
     quaternion = Rotation.from_euler(seq, euler, degrees).as_quat()
     quaternion = np.roll(quaternion, 1, axis=1)# Cast to formula (w, x, y, z)
     return  qt.from_float_array(quaternion) 
+
+
+def quaternionMatrixMultiply(q1: np.ndarray, q2: np.ndarray):
+    """
+    Multiply quaternion matrix 
+
+    Args:
+        q1 (np.ndarray): Matrix of quaternions (n,m)
+        q2 (np.ndarray): Matrix of quaternions (m,k)
+
+    Returns:
+        matrix: Matrix of quaternions (n,k)
+    """
+    if q1.shape[1] != q2.shape[0]:
+        raise 'q1.shape[1] must be equal q2.shape[0]'
+    
+    matrix = np.zeros((q1.shape[0],q2.shape[1]), dtype=qt.quaternion)
+    
+    for j in range(matrix.shape[0]):
+        for i in range(matrix.shape[1]):
+            matrix[j,i] = np.sum(q1[j,:] * q2[:,i])
+
+    return matrix   
+
+
+def randQuaternion():
+    """
+    Generate random normalized quaternion
+
+    Returns:
+        np.quaternion: Normalized quaternion
+    """
+    return np.quaternion(random.random(),
+                         random.random(),
+                         random.random(),
+                         random.random()).normalized()
+
+
+def randQuaternionVector(n: int):
+    """
+    Generate random vector (n,) normalized quaternion
+
+    Args:
+        n (int): Vector length
+
+    Returns:
+        np.array(qt.quaternion): Vector (n,) of normalized quaternion 
+    """
+    return np.array([randQuaternion() for _ in range(n)])
