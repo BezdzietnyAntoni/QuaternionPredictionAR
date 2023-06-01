@@ -7,7 +7,7 @@ import numpy as np
 import quaternion as qt
 
 from scipy.spatial.transform import Rotation
-
+from quaternion.calculus import spline_evaluation
 
 
 def quaternionToEuler(quaternion: np.ndarray | qt.quaternion, 
@@ -91,6 +91,30 @@ def quaternionMatrixMultiply(q1: np.ndarray, q2: np.ndarray):
             matrix[j,i] = np.sum(q1[j,:] * q2[:,i])
 
     return matrix   
+
+
+def splineInterpolation(quaternions: np.ndarray,
+                        timestamp: np.ndarray,
+                        interpolation_timestamp: np.ndarray,
+                        spline_degree: int = 1):
+    
+    if timestamp[0] > interpolation_timestamp[0]:
+        raise ValueError("'interpolation_timestamp' minimal value\
+                          must be equal or greater than minimal value 'timestamp'")
+    if timestamp[-1] < interpolation_timestamp[-1]:
+        raise ValueError("'interpolation_timestamp' maximum value\
+                          must be equal or less than maximum value 'timestamp'")
+
+    # Normalization timestamp [0...1]
+    denominator = timestamp[-1] - timestamp[0]
+
+    timestamp_normalized = ( timestamp - timestamp[-1] ) / denominator
+    interpolation_timestamp_normalized  = ( interpolation_timestamp - timestamp[-1] ) / denominator
+
+    # Spline interpolation
+    return spline_evaluation(quaternions, timestamp_normalized, 
+                             interpolation_timestamp_normalized, 
+                             spline_degree = spline_degree)
 
 
 def randQuaternion():
