@@ -3,4 +3,5 @@ numpy-quaternion >= 2022.4.3
 matplotlib       >= 3.7.1
 scipy            >= 1.10.1
 scipy            >= 1.10.1
+jupyterlab       >= 4.0.1
 pandas           >= 2.0.2  # Only for display in VSCode
