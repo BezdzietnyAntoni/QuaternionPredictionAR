@@ -112,9 +112,10 @@ def splineInterpolation(quaternions: np.ndarray,
     interpolation_timestamp_normalized  = ( interpolation_timestamp - timestamp[-1] ) / denominator
 
     # Spline interpolation
-    return spline_evaluation(quaternions, timestamp_normalized, 
-                             interpolation_timestamp_normalized, 
-                             spline_degree = spline_degree)
+    return qt.from_float_array(spline_evaluation(qt.as_float_array(quaternions), 
+                                timestamp_normalized, 
+                                interpolation_timestamp_normalized, 
+                                spline_degree = spline_degree))
 
 
 def correlationMatrix(s : np.ndarray, m_size : int, normalize : bool = False):
