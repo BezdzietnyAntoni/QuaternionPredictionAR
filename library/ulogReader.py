@@ -6,6 +6,7 @@ import numpy as np
 import quaternion as qt
 
 from pyulog import ULog
+from quaternionUtils import eulerToQuaternion
 
 
 
@@ -43,4 +44,13 @@ def readNavigator(ulg: ULog):
         nav_euler (np.ndarray): Array of euler value (n, 3)
         time_stamp (np.array): Array of timestamp (n,)
     """   
-    pass
+
+    nav_logs = ulg.get_dataset('navigator_setpoint') # Get navigator_setpoint dataset
+    n_logs   = nav_logs.data['sp_Roll_angle'].shape[0] # N_logs
+
+    nav_euler  = np.zeros((n_logs,3)) # Allocate memory
+    nav_euler[:,0] = nav_logs.data['sp_Roll_angle']
+    nav_euler[:,1] = nav_logs.data['sp_Pitch_angle']
+    nav_euler[:,2] = nav_logs.data['sp_Yaw_angle']
+
+    return eulerToQuaternion(nav_euler, 'XYZ', False), nav_logs.data['timestamp']
