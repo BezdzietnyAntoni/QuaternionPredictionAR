@@ -6,7 +6,7 @@ import numpy as np
 import quaternion as qt
 
 from pyulog import ULog
-from .quaternionUtils import eulerToQuaternion
+from library.quaternionUtils import eulerToQuaternion
 
 
 
