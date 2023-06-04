@@ -44,3 +44,29 @@ def displayPredictionError(x, y, k_forecast, title ='Błąd predykcji'):
     plt.legend()
     plt.grid()
     plt.show()
+
+
+def displayLorenz(data_plot, data_label):
+    # 3D plot
+    ax = plt.figure().add_subplot(projection='3d')
+
+    for j in range(len(data_plot)):
+        ax.plot(*(data_plot[j]).T, lw=0.5, label=data_label[j])
+    ax.set_xlabel("X Axis")
+    ax.set_ylabel("Y Axis")
+    ax.set_zlabel("Z Axis")
+    ax.set_title("Lorenz Attractor")
+    plt.show()
+
+    # Plot all components
+    TITLES = ["X Axis", "Y Axis", "Z Axis"]
+
+    for i, title in enumerate(TITLES):
+        plt.subplot(3,1,i+1)
+        for j in range(len(data_plot)):
+            plt.plot(data_plot[j][:,i], label=data_label[j])
+        plt.title(title)
+        plt.grid()
+        plt.legend()
+    plt.tight_layout()
+    plt.show()
