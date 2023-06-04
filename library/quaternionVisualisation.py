@@ -31,3 +31,16 @@ def display_quat_as_euler(
 
     plt.suptitle(title)
     plt.show()
+
+
+def displayPredictionError(x, y, k_forecast, title ='Błąd predykcji'):
+    for k, k_steps in enumerate(k_forecast):
+        er_priori = qu.quaternionError(y[k,  : x.shape[0]], x)
+        plt.plot(er_priori, linewidth=1, label='k_steps={}'.format(k_steps))
+    plt.title(title)
+    plt.xlabel('Błąd n-tej próbki')
+    plt.ylabel(r'Błąd a-priori $|y(n) - \hat y(n)|$')
+    plt.yscale('log')
+    plt.legend()
+    plt.grid()
+    plt.show()

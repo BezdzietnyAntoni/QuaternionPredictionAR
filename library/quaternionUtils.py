@@ -144,6 +144,25 @@ def correlationMatrix(s : np.ndarray, m_size : int, normalize : bool = False):
     return corr_matrix
 
 
+def predictionKSteps(s: np.ndarray, w: np.ndarray, k_steps: int):
+    """
+    Prediction K steps forward.
+
+    Args:
+        s (np.ndarray): Signal quaternion (1,n)
+        w (np.ndarray): Filter coefficients (1,n)
+        k_steps (int): K forecast step
+
+    Returns:
+        predicted_quaternion: Predicted quaternion
+    """
+    for _ in range(k_steps):
+        s[-1] = np.sum(w * s).normalized()
+        s = np.roll(s, 1)
+    
+    return s[0]
+
+
 def randQuaternion():
     """
     Generate random normalized quaternion
@@ -168,3 +187,20 @@ def randQuaternionVector(n: int):
         np.array(qt.quaternion): Vector (n,) of normalized quaternion 
     """
     return np.array([randQuaternion() for _ in range(n)])
+
+
+def quaternionError(q_predicted: np.ndarray, q_reference: np.ndarray):
+    """
+    Function designate quaternion mean error.
+
+    Args:
+        q_predicted (np.ndarray): Predicted quaternion (1,n)
+        q_reference (np.ndarray): Reference quaternion (1,n)
+
+    Returns:
+        errors (np.ndarray): Error in quaternion (1,n)
+    """
+    f_predicted = qt.as_float_array(q_predicted)
+    f_reference = qt.as_float_array(q_reference)
+
+    return np.sqrt( np.mean( (f_reference - f_predicted)**2, axis=1 ) ) 
