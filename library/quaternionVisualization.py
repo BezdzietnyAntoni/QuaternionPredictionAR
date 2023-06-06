@@ -28,6 +28,7 @@ def display_quat_as_euler(
         plt.xlabel('N-ta próbka')
         plt.title(TITLES[i])
         plt.legend(loc='upper right')
+        plt.grid()
 
     plt.suptitle(title)
     plt.show()
