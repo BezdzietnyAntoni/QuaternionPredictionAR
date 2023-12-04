@@ -1,4 +1,4 @@
-# QuatrnionPredictionAR
+# QuaternionPredictionAR
 Prediction of qunaternions using the AR model 
 
 ## Introduction 
